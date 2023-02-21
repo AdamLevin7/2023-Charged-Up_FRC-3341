@@ -57,7 +57,7 @@ public class Arm extends SubsystemBase {
     armTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     extendingTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
-    extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+    extendingTalon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
    
     //armTalon.setSensorPhase(true);
     armTalon.setInverted(true);
@@ -72,6 +72,8 @@ public class Arm extends SubsystemBase {
     // Integration range, if we are using the integral term of PID
     armPID.setIntegratorRange(-5, 5);
     armTalon.configPeakCurrentLimit(15);
+    extendingTalon.configForwardSoftLimitThreshold(31000);
+    extendingTalon.configReverseSoftLimitEnable(true);
 
     // Only use the datalogger in testing!
 
@@ -92,7 +94,7 @@ public class Arm extends SubsystemBase {
     armTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
   }
   public void extendArm(double power){
-     extendingTalon.set(ControlMode.PercentOutput, power*0.2+(Math.sin(getAngle())*(1.12/12.0)));
+     extendingTalon.set(ControlMode.PercentOutput, power);
   }
 
   public void moveExtend(double power) {
@@ -164,6 +166,15 @@ public class Arm extends SubsystemBase {
       armPID.setSetpoint(angle);
       updatePID();
     }
+      if(RobotContainer.getJoy1().getPOV() > 300 || RobotContainer.getJoy1().getPOV() < 60){
+        extendArm(1);
+    }
+      else if(RobotContainer.getJoy1().getPOV() < 210 && RobotContainer.getJoy1().getPOV() > 150){
+        extendArm(-1);
+    }
+      else{
+        extendArm(0);
+    }
 
     if (logOverride) {
       angleLog.append(getAngle());
@@ -172,6 +183,7 @@ public class Arm extends SubsystemBase {
     SmartDashboard.putNumber("Ticks: ", armTalon.getSelectedSensorPosition(0));
     SmartDashboard.putNumber("Voltage: ", armTalon.getMotorOutputPercent());
     SmartDashboard.putNumber("Angle: ", getAngle());
+    SmartDashboard.putNumber("POV: ", RobotContainer.getJoy1().getPOV());
 
     // Repeatedly set new PID constants from Driverstation
     if(differenceInAngle >= 0) {

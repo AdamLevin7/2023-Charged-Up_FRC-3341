@@ -24,6 +24,7 @@ public class Claw extends SubsystemBase {
   //Talons are placeholders until we know the final claw design
 
   Servo leftServo = new Servo(Constants.OperatorConstants.leftServoPort);
+  private double pos = leftServo.getPosition();
 
   boolean clawed = false;
   //Clay either has 3 talons or 1
@@ -47,26 +48,26 @@ public class Claw extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     //pinchManual(RobotContainer.getJoy().getY());
-    if(RobotContainer.getJoy1().getRawButtonPressed(2)){
-      leftServo.set(0);
+    leftServo.set(pos);
+    /*if(RobotContainer.getJoy1().getTriggerReleased()){
+      if(pos == 0){
+        pos = 0.6;
+      }
+      else{
+        pos = 0;
+      } 
+    }*/
+    if(RobotContainer.getJoy1().getRawButtonPressed(12)){
+      if(pos < 1){
+        pos += 0.05;
+      }
+      
+      
     }
-    if(RobotContainer.getJoy1().getRawButtonPressed(3)){
-      leftServo.set(0.2);
-    }
-    if(RobotContainer.getJoy1().getRawButtonPressed(4)){
-      leftServo.set(0.4);
-    }
-    if(RobotContainer.getJoy1().getRawButtonPressed(5)){
-      leftServo.set(0.6);
-    }
-    if(RobotContainer.getJoy1().getRawButtonPressed(6)){
-      leftServo.set(0.8);
-    }
-    if(RobotContainer.getJoy1().getRawButtonPressed(7)){
-      leftServo.set(1);
-    }
-    if(RobotContainer.getJoy1().getTriggerPressed()){
-      clawed = !clawed;
+    if(RobotContainer.getJoy1().getRawButtonPressed(11)){
+      if(pos > 0){
+        pos -= 0.05;
+      }
     }
     pinchButton(clawed);
     SmartDashboard.putNumber("Voltage", clawTalon.getMotorOutputVoltage());

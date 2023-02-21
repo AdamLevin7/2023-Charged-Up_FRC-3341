@@ -1,6 +1,9 @@
 package frc.robot;
 
+import java.lang.ModuleLayer.Controller;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -8,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Extend;
 import frc.robot.commands.Rotate;
 import frc.robot.subsystems.Arm;
+import frc.robot.subsystems.Claw;
+import frc.robot.subsystems.DriveTrain;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,9 +24,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   public final Arm arm = new Arm();
+  public final Claw claw = new Claw();
+  public final DriveTrain dt = new DriveTrain();
 
   public static final Joystick leftJoystick = new Joystick(0);
-
+  public static final Joystick rightJoystick = new Joystick(1);
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -49,7 +56,6 @@ public class RobotContainer {
 
     JoystickButton triggerGroundPos = new JoystickButton(leftJoystick, 6);
     triggerGroundPos.onTrue(new Rotate(arm, 90));
-
     //JoystickButton triggerMiddleExt = new JoystickButton(leftJoystick, 8);
     //triggerMiddleExt.onTrue(new Extend(arm, 10));
   }
@@ -66,5 +72,8 @@ public class RobotContainer {
 
   public static Joystick getJoy1() {
     return leftJoystick;
+  }
+  public static Joystick getJoy2() {
+    return rightJoystick;
   }
 }

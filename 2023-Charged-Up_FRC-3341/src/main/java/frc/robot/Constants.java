@@ -15,7 +15,9 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int armPort = 2;
+    public static final int leftDrivePort = 1;
+    public static final int rightDrivePort = 2;
+    public static final int armPort = 3; //its actually 2 but im not using arm rn
     public static final int extPort = 4;
     public static final int clawPort = 6;
     public static final int wristPort = 12;
